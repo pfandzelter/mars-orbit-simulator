@@ -145,7 +145,7 @@ class Simulation:
         captureImages=False,
         captureInterpolation=1,
         captureGML=False,
-        groundPtsFile="city_data.txt",
+        groundPtsFile="site_data.txt",
         gmlImportFileName=None,
     ):
         if gmlImportFileName is not None:

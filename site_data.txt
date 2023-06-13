@@ -1,0 +1,16 @@
+name lat lon
+mars_2 -45 -156.5
+mars_3 -45 -79
+mars_6 -33.9 -9.71
+viking_1 22.48 -24.985
+mars_polar_lander -76.57 82.6
+pathfinder 19.33 -16.775
+beagle_2 -10.6 -135
+spirit -14.571892 87.73924
+opportunity -1.9462 177.2367
+phoenix 68.218830 117.125389
+curiosity -4.5895 68.72085
+insight 4.502 67.8115
+exomars_rover 18.1 167.85
+mars_2020 77.5945 9.1814
+north_pole 90.0 0.0

@@ -191,7 +191,7 @@ class Constellation:
         ecc=0.0,
         # minCommunicationsAltitude=100000,
         minCommunicationsAltitude=100,
-        minSatElevation=40,
+        minSatElevation=25,
         linkingMethod="SPARSE",
         arcOfAscendingNodes=360.0,
     ):
@@ -266,7 +266,7 @@ class Constellation:
                     a=self.semi_major_axis,  # if circular orbit, this is same as radius
                     e=self.eccentricity,  # generally close to 0 for leo constillations
                     Omega=raan,  # right ascention of the ascending node
-                    w=0.0,  # initial time offset / mean anamoly
+                    w=0.0,  # initial time offset / mean anomaly
                     i=self.inclination,
                 )
             )  # orbit inclination
@@ -274,7 +274,7 @@ class Constellation:
                 f"Orbit for {raan} degrees RAAN. Period: {self.period}, a: {self.semi_major_axis}, e: {self.eccentricity}, Omega: {raan}, w: 0.0, i: {self.inclination}"
             )
 
-        # figure out the time offsets for nodes withen a plane
+        # figure out the time offsets for nodes within a plane
         self.time_offsets = [
             (self.period / nodes_per_plane) * i for i in range(0, nodes_per_plane)
         ]
@@ -294,26 +294,26 @@ class Constellation:
 
         # we offset each plane by a small amount, so they do not 'collide'
         # this little algorithm comes up with a list of offset values
-        phase_offset = 0
-        phase_offset_increment = (
-            self.period / self.nodes_per_plane
-        ) / self.number_of_planes
-        temp = []
-        toggle = False
+        # phase_offset = 0
+        # phase_offset_increment = (
+        #     self.period / self.nodes_per_plane
+        # ) / self.number_of_planes
+        # temp = []
+        # toggle = False
         # this loop results puts thing in an array in this order:
         # [...8,6,4,2,0,1,3,5,7...]
         # so that the offsets in adjacent planes are similar
         # basically do not want the max and min offset in two adjcent planes
-        for i in range(self.number_of_planes):
-            if toggle:
-                temp.append(phase_offset)
-            else:
-                temp.insert(0, phase_offset)
-                # temp.append(phase_offset)
-            toggle = not toggle
-            phase_offset = phase_offset + phase_offset_increment
+        # for i in range(self.number_of_planes):
+        #     if toggle:
+        #         temp.append(phase_offset)
+        #     else:
+        #         temp.insert(0, phase_offset)
+        #         # temp.append(phase_offset)
+        #     toggle = not toggle
+        #     phase_offset = phase_offset + phase_offset_increment
 
-        phase_offsets = temp
+        # phase_offsets = temp
 
         # randomly shuffle the list...
         # random.shuffle(temp)
@@ -326,11 +326,17 @@ class Constellation:
         # 	if i_2 < (len(temp)):
         # 		phase_offsets.append(temp[i_2])
 
+        # 50% phase offset
+        # phase_offsets = []
         # loop through all satellites
         for plane in range(0, self.number_of_planes):
             for node in range(0, self.nodes_per_plane):
                 # calculate the KE solver time offset
-                offset = self.time_offsets[node] + phase_offsets[plane]
+                offset = self.time_offsets[node] - (
+                    (self.period / self.nodes_per_plane) / 2
+                ) * (
+                    plane % 2
+                )  # + phase_offsets[plane]
 
                 # calculate the unique ID of the node (same as array index)
                 unique_id = (plane * self.nodes_per_plane) + node
@@ -513,8 +519,8 @@ class Constellation:
         tmp = math.pow(semi_major_axis, 3) / STD_GRAVITATIONAL_PARAMATER_MARS
         return int(2.0 * math.pi * math.sqrt(tmp))
 
-    def addGroundPoint(self, latitude, longitude, altitude=100.0):
-        """adds a ground point at given coordinates, assumes earth is perfect sphere
+    def addGroundPoint(self, latitude, longitude, altitude=20000.0):
+        """adds a ground point at given coordinates, assumes mars is perfect sphere
 
         Parameters
         ----------
@@ -523,7 +529,7 @@ class Constellation:
         longitude : float
                 longitude of ground point (in degrees)
         altitude : float
-                altitude of point in meters (0 = earth surface)
+                altitude of point in meters (0 = mars surface)
 
         Returns
         -------
@@ -1223,35 +1229,8 @@ class Constellation:
                     )
                 )
 
-                print(
-                    "X:",
-                    satellites_array[sat_idx]["x"],
-                    groundpoints_array[gnd_idx]["x"],
-                    "Y:",
-                    satellites_array[sat_idx]["y"],
-                    groundpoints_array[gnd_idx]["y"],
-                    "Z:",
-                    satellites_array[sat_idx]["z"],
-                    groundpoints_array[gnd_idx]["z"],
-                )
-                print(
-                    "Distance from gnd",
-                    groundpoints_array[gnd_idx]["ID"],
-                    "to sat",
-                    satellites_array[sat_idx]["ID"],
-                    ":",
-                    d,
-                )
-
                 # deicide if link is valid or not
                 if d < max_stg_range:
-                    print(
-                        "Link from",
-                        groundpoints_array[gnd_idx]["ID"],
-                        "to sat",
-                        satellites_array[sat_idx]["ID"],
-                        "is valid",
-                    )
                     if link_idx < link_array_size - 1:
                         gnd_id = groundpoints_array[gnd_idx]["ID"]
                         sat_id = satellites_array[sat_idx]["ID"]
