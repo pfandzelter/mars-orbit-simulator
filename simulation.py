@@ -1117,7 +1117,7 @@ class Simulation:
         # self.marsActor.GetProperty().SetOpacity(MARS_LAND_OPACITY)
 
         # following code from:
-        # https://gist.github.com/somada141/bd1b1c6e0e95bdecd260
+        # https://github.com/souwang324/solarStars/tree/main
 
         sphere = vtk.vtkSphereSource()
         sphere.SetThetaResolution(12)
