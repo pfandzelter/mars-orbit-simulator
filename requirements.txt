@@ -1,0 +1,6 @@
+numba==0.56.4
+numpy==1.23.5
+vtk==9.1.0
+networkx==2.6.3
+PyAstronomy==0.17.0
+PyQt5==5.15.7
