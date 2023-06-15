@@ -662,82 +662,95 @@ class Constellation:
                 max coms distance in meters
 
         """
-
-        # TODO
-        # make a drawing explaining this
-
-        full_line = False
-        tangent_tol = 1e-9
-
-        # point 1 of line segment, representing groundstation
-        # p1x, p1y = (0, EARTH_RADIUS)
-        p1x, p1y = (0, MARS_RADIUS)
-
-        # point 2 of line segment, representing really far point
-        # at min_elevation slope from point 1
-        slope = math.tan(math.radians(min_elevation))
-        run = 384748000  # meters, sma of moon
-        # rise = slope * run + EARTH_RADIUS
-        rise = slope * run + MARS_RADIUS
-        p2x, p2y = (run, rise)
-
-        # center of orbit circle = earth center
-        # radius = orbit radius
-        cx, cy = (0, 0)
-        circle_radius = self.semi_major_axis
-
-        (x1, y1), (x2, y2) = (p1x - cx, p1y - cy), (p2x - cx, p2y - cy)
-        dx, dy = (x2 - x1), (y2 - y1)
-        dr = (dx**2 + dy**2) ** 0.5
-        big_d = x1 * y2 - x2 * y1
-        discriminant = circle_radius**2 * dr**2 - big_d**2
-
-        if discriminant < 0:  # No intersection between circle and line
-            print("ERROR! problem with calculateMaxSpaceToGndDistance, no intersection")
+        if min_elevation < 0 or min_elevation > 90:
+            print("ERROR! min_elevation must be between 0 and 90 degrees")
             return 0
-        else:  # There may be 0, 1, or 2 intersections with the segment
-            intersections = [
-                (
-                    cx
-                    + (
-                        big_d * dy
-                        + sign * (-1 if dy < 0 else 1) * dx * discriminant**0.5
-                    )
-                    / dr**2,
-                    cy + (-big_d * dx + sign * abs(dy) * discriminant**0.5) / dr**2,
-                )
-                for sign in ((1, -1) if dy < 0 else (-1, 1))
-            ]
 
-            # This makes sure the order along the segment is correct
-            if not full_line:
-                # Filter out intersections that do not fall within the segment
-                fraction_along_segment = [
-                    (xi - p1x) / dx if abs(dx) > abs(dy) else (yi - p1y) / dy
-                    for xi, yi in intersections
-                ]
+        # calculate triangle using law of sines
+        a = self.semi_major_axis
+        b = MARS_RADIUS
+        alpha = math.radians(min_elevation + 90)
 
-                intersections = [
-                    pt
-                    for pt, frac in zip(intersections, fraction_along_segment)
-                    if 0 <= frac <= 1
-                ]
+        beta = math.asin(math.sin(alpha) * b / a)
 
-            if len(intersections) == 2 and abs(discriminant) <= tangent_tol:
-                # If line is tangent to circle, return just one point
-                print("ERROR!, got 2 intersections, expecting 1")
-                return 0
-            else:
-                ints_lst = intersections
+        c = math.sin(math.radians(180) - alpha - beta) * a / math.sin(alpha)
+        return int(c)
 
-        # assuming 2 intersections were found...
-        for i in ints_lst:
-            if i[1] < 0:
-                continue
-            else:
-                # calculate dist to this intersection
-                d = math.sqrt(math.pow(i[0] - p1x, 2) + math.pow(i[1] - p1y, 2))
-                return int(d)
+        # # TODO
+        # # make a drawing explaining this
+
+        # full_line = False
+        # tangent_tol = 1e-9
+
+        # # point 1 of line segment, representing groundstation
+        # # p1x, p1y = (0, EARTH_RADIUS)
+        # p1x, p1y = (0, MARS_RADIUS)
+
+        # # point 2 of line segment, representing really far point
+        # # at min_elevation slope from point 1
+        # slope = math.tan(math.radians(min_elevation))
+        # run = 384748000  # meters, sma of moon
+        # # rise = slope * run + EARTH_RADIUS
+        # rise = slope * run + MARS_RADIUS
+        # p2x, p2y = (run, rise)
+
+        # # center of orbit circle = earth center
+        # # radius = orbit radius
+        # cx, cy = (0, 0)
+        # circle_radius = self.semi_major_axis
+
+        # (x1, y1), (x2, y2) = (p1x - cx, p1y - cy), (p2x - cx, p2y - cy)
+        # dx, dy = (x2 - x1), (y2 - y1)
+        # dr = (dx**2 + dy**2) ** 0.5
+        # big_d = x1 * y2 - x2 * y1
+        # discriminant = circle_radius**2 * dr**2 - big_d**2
+
+        # if discriminant < 0:  # No intersection between circle and line
+        #     print("ERROR! problem with calculateMaxSpaceToGndDistance, no intersection")
+        #     return 0
+        # else:  # There may be 0, 1, or 2 intersections with the segment
+        #     intersections = [
+        #         (
+        #             cx
+        #             + (
+        #                 big_d * dy
+        #                 + sign * (-1 if dy < 0 else 1) * dx * discriminant**0.5
+        #             )
+        #             / dr**2,
+        #             cy + (-big_d * dx + sign * abs(dy) * discriminant**0.5) / dr**2,
+        #         )
+        #         for sign in ((1, -1) if dy < 0 else (-1, 1))
+        #     ]
+
+        #     # This makes sure the order along the segment is correct
+        #     if not full_line:
+        #         # Filter out intersections that do not fall within the segment
+        #         fraction_along_segment = [
+        #             (xi - p1x) / dx if abs(dx) > abs(dy) else (yi - p1y) / dy
+        #             for xi, yi in intersections
+        #         ]
+
+        #         intersections = [
+        #             pt
+        #             for pt, frac in zip(intersections, fraction_along_segment)
+        #             if 0 <= frac <= 1
+        #         ]
+
+        #     if len(intersections) == 2 and abs(discriminant) <= tangent_tol:
+        #         # If line is tangent to circle, return just one point
+        #         print("ERROR!, got 2 intersections, expecting 1")
+        #         return 0
+        #     else:
+        #         ints_lst = intersections
+
+        # # assuming 2 intersections were found...
+        # for i in ints_lst:
+        #     if i[1] < 0:
+        #         continue
+        #     else:
+        #         # calculate dist to this intersection
+        #         d = math.sqrt(math.pow(i[0] - p1x, 2) + math.pow(i[1] - p1y, 2))
+        #         return int(d)
 
     def calculateIdealLinks(self, max_isl_range, max_stg_range):
         """
@@ -1074,6 +1087,8 @@ class Constellation:
                     self.groundpoints_array[gnd_idx]["z"],
                 ]
 
+                has_link = False
+
                 for sat_idx in range(self.total_sats):
                     # calculate distance
                     d = int(
@@ -1092,6 +1107,7 @@ class Constellation:
 
                     # deicide if link is valid or not
                     if d < max_stg_range:
+                        has_link = True
                         if link_idx < self.link_array_size - 1:
                             gnd_id = self.groundpoints_array[gnd_idx]["ID"]
                             sat_id = self.satellites_array[sat_idx]["ID"]
@@ -1102,6 +1118,9 @@ class Constellation:
                         else:
                             print("ERROR! ran out of room in the link array")
                             return
+
+                if not has_link:
+                    print("ERROR! ground point has no links")
 
                 self.number_of_gnd_links = link_idx - self.number_of_isl_links
                 self.total_links = link_idx

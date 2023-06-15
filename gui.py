@@ -53,6 +53,9 @@ MAKE_LINKS = True
 # in the GUI
 NETWORK_DESIGNS = ["SPARSE", "+GRID", "IDEAL"]
 
+# constellation designs
+CONSTELLATION_DESIGNS = ["WALKER STAR", "WALKER DELTA"]
+
 # button styles:
 
 # red, black text
@@ -131,6 +134,13 @@ class ApplicationWindow(QWidget):
         self.smaEdit.setToolTip("int")
         self.input.addWidget(self.smaLabel, 4, 0)
         self.input.addWidget(self.smaEdit, 4, 1)
+
+        self.constellationLabel = QLabel("Constellation Design:")
+        self.constellationSelect = QComboBox()
+        self.constellationSelect.addItems(CONSTELLATION_DESIGNS)
+        # self.constellationSelect.activated[str].connect(self.setConstellationMethod)
+        self.input.addWidget(self.constellationLabel, 5, 0)
+        self.input.addWidget(self.constellationSelect, 5, 1)
 
     def makeControls(self):
         self.controls.setSpacing(5)  # space between buttons
@@ -297,13 +307,22 @@ class ApplicationWindow(QWidget):
         i = float(self.incEdit.text())
         # a = float(self.smaEdit.text()) * 1000 + EARTH_RADIUS
         a = float(self.smaEdit.text()) * 1000 + MARS_RADIUS
+        c = self.constellationSelect.currentText()
         ts = int(self.timestepEdit.text())
+
+        if c == "WALKER STAR":
+            aoan = 180.0
+            i = 90.0
+        elif c == "WALKER DELTA":
+            aoan = 360.0
+
         self.con = {
             "planes": p,
             "nodesPerPlane": n,
             "inclination": i,
             "semiMajorAxis": a,
             "timeStep": ts,
+            "arcOfAscendingNodes": aoan,
         }
 
     def killVTKModel(self):

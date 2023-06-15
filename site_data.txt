@@ -14,3 +14,4 @@ insight 4.502 67.8115
 exomars_rover 18.1 167.85
 mars_2020 77.5945 9.1814
 north_pole 90.0 0.0
+equator 0.0 0.0

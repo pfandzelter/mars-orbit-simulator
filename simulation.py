@@ -36,15 +36,15 @@ import networkx as nx
 # use to measure program performance (sim framerate)
 import time
 
-# try to import numba funcs
-try:
-    import numba_funcs as nf
+# # try to import numba funcs
+# try:
+#     import numba_funcs as nf
 
-    USING_NUMBA = True
-except ModuleNotFoundError:
-    USING_NUMBA = False
-    print("you probably do not have numba installed...")
-    print("reverting to non-numba mode")
+#     USING_NUMBA = True
+# except ModuleNotFoundError:
+#     USING_NUMBA = False
+#     print("you probably do not have numba installed...")
+#     print("reverting to non-numba mode")
 
 
 ###############################################################################
@@ -140,6 +140,7 @@ class Simulation:
         inclination=70,
         semiMajorAxis=6472000,
         timeStep=10,
+        arcOfAscendingNodes=360.0,
         makeLinks=True,
         animate=True,
         captureImages=False,
@@ -290,6 +291,7 @@ class Simulation:
             self.semi_major_axis = semiMajorAxis
             self.min_communications_altitude = 100000
             self.min_sat_elevation = MIN_SAT_ELEVATION
+            self.arcOfAscendingNodes = arcOfAscendingNodes
 
             # path calculation
             self.path_node_1 = None
@@ -336,6 +338,7 @@ class Simulation:
                 minCommunicationsAltitude=self.min_communications_altitude,
                 minSatElevation=self.min_sat_elevation,
                 linkingMethod=self.linking_method,
+                arcOfAscendingNodes=self.arcOfAscendingNodes,
             )
 
             # add ground points to the constillation model
