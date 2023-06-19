@@ -2,6 +2,26 @@
 
 A fork of [Ben-Kempton/SILLEO-SCNS](https://github.com/Ben-Kempton/SILLEO-SCNS) for Mars satellite constellations.
 
+## Citation
+
+If you use this software in a publication, please cite it as:
+
+### Text
+
+T. Pfandzelter and D. Bermbach, **Can Orbital Servers Provide Mars-Wide Edge Computing?**, 2023, arXiv: 2306.09756.
+
+### BibTeX
+
+```bibtex
+@inproceedings{pfandzelter2023canmars,
+    title = "Can Orbital Servers Provide Mars-Wide Edge Computing?",
+    author = "Pfandzelter, Tobias and Bermbach, David",
+    eprint = "2306.09756"
+}
+```
+
+For a full list of publications, please see [our website](https://www.tu.berlin/en/mcc/research/publications).
+
 ## License
 
 All code in this repository is licensed under the terms of the [GNU General Public License Version 3](./LICENSE), the same as the original repository.
