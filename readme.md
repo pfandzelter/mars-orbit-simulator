@@ -8,18 +8,27 @@ If you use this software in a publication, please cite it as:
 
 ### Text
 
-T. Pfandzelter and D. Bermbach, **Can Orbital Servers Provide Mars-Wide Edge Computing?**, 2023, arXiv: 2306.09756.
+T. Pfandzelter and D. Bermbach, **Can Orbital Servers Provide Mars-Wide Edge Computing?**, 1st ACM MobiCom Workshop on Satellite Networking and Computing (SatCom '23), Madrid, Spain. Association for Computing Machinery, New York, NY, USA. October, 2023.
 
 ### BibTeX
 
 ```bibtex
-@inproceedings{pfandzelter2023canmars,
-    title = "Can Orbital Servers Provide Mars-Wide Edge Computing?",
+@inproceedings{pfandzelter2023mars,
     author = "Pfandzelter, Tobias and Bermbach, David",
-    eprint = "2306.09756"
+    title = "Can Orbital Servers Provide Mars-Wide Edge Computing?",
+    booktitle = "Proceedings of the 1st ACM MobiCom Workshop on Satellite Networking and Computing",
+    pages = "to appear",
+    month = oct,
+    year = 2023,
+    publisher = "ACM",
+    address = "New York, NY, USA",
+    series = "SatCom '23",
+    location = "Madrid, Spain",
+    doi = "10.1145/3570361.3614239"
 }
 ```
 
+A preprint is available on [arXiv](https://arxiv.org/abs/2306.09756).
 For a full list of publications, please see [our website](https://www.tu.berlin/en/mcc/research/publications).
 
 ## License
